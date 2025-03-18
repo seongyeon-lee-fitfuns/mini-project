@@ -34,7 +34,7 @@ export default function ApiExplorer() {
       }
       console.log('method', method);
       console.log('url', url);
-      const response = await fetch(url, {
+      const response = await fetch(`http://localhost:7350/${url}`, {
         method: method,
         ...(method.toLowerCase() !== 'get' && {
           body: JSON.stringify(parsedBody)
@@ -80,7 +80,7 @@ export default function ApiExplorer() {
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="http://localhost:7350/healthcheck"
+                  placeholder="healthcheck"
                   className="flex-grow border border-gray-300 px-3 py-2"
                 />
                 <button
