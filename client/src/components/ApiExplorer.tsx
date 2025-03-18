@@ -100,11 +100,13 @@ export default function ApiExplorer() {
           <h5 className="font-bold">요청 본문</h5>
           <hr className="mb-4" />
           <div className="border rounded p-2 mb-3 h-[500px]">
-            <JsonEditor 
-              value={requestBody} 
-              onChange={setRequestBody} 
-              height="500px" 
-            />
+            {method.toLowerCase() !== 'get' && (
+              <JsonEditor 
+                value={requestBody} 
+                onChange={setRequestBody} 
+                height="500px" 
+              />
+            )}
           </div>
         </div>
         
