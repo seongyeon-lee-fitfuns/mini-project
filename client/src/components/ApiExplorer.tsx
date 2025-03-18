@@ -1,18 +1,17 @@
 'use client';
-
 import { useState } from 'react';
-import { ApiMethod, ApiRequest, ApiResponse } from '@/types/api';
 import JsonEditor from '@/components/JsonEditor';
 
-interface ApiExplorerProps {
-  apiMethods: ApiMethod[];
-  onSubmit: (request: ApiRequest) => Promise<void>;
-  response: ApiResponse | null;
+// 타입 정의 추가
+interface ApiResponse {
+  error?: any;
+  data?: any;
 }
 
-export default function ApiExplorer({ apiMethods, onSubmit, response }: ApiExplorerProps) {
+export default function ApiExplorer() {
   const [method, setMethod] = useState<string>('');
-  const [userId, setUserId] = useState<string>('');
+  const [url, setUrl] = useState<string>('');
+  const [response, setResponse] = useState<ApiResponse | null>(null);
   const [requestBody, setRequestBody] = useState<string>(`{
   "account": {
     "id": "<string>",
@@ -29,14 +28,23 @@ export default function ApiExplorer({ apiMethods, onSubmit, response }: ApiExplo
     
     try {
       const parsedBody = JSON.parse(requestBody);
-      
-      const request: ApiRequest = {
-        method,
-        userId,
-        body: parsedBody
-      };
-      
-      await onSubmit(request);
+      console.log('<---------\treques\t---------->');
+      if (method.toLowerCase() !== 'get') {
+        console.log('parsedBody', parsedBody);
+      }
+      console.log('method', method);
+      console.log('url', url);
+      const response = await fetch(url, {
+        method: method,
+        ...(method.toLowerCase() !== 'get' && {
+          body: JSON.stringify(parsedBody)
+        })
+      });
+
+      const data = await response.json();
+      console.log('<---------\tresponse\t---------->');
+      console.log('response', data);
+      setResponse(data);
     } catch (error) {
       console.error('JSON 파싱 오류:', error);
       alert('요청 본문 JSON이 유효하지 않습니다.');
@@ -52,27 +60,27 @@ export default function ApiExplorer({ apiMethods, onSubmit, response }: ApiExplo
           <div className="w-3/4">
             <form onSubmit={handleSubmit} className="w-full">
               <div className="flex">
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 md:flex-row">
                   <select
                     id="method"
                     value={method}
                     onChange={(e) => setMethod(e.target.value)}
                     className="form-select rounded-l border border-gray-300 py-2 px-3"
                   >
-                    <option disabled value="">API 메소드 선택</option>
+                    <option disabled value="">메소드 선택</option>
                     <option disabled className="text-muted">----</option>
-                    {apiMethods.map((api) => (
-                      <option key={api.value} value={api.value}>
-                        {api.name}
+                    {["get", "post", "put", "delete"].map((status) => (
+                      <option key={status} value={status}>
+                        {status}
                       </option>
                     ))}
                   </select>
                 </div>
                 <input
                   type="text"
-                  value={userId}
-                  onChange={(e) => setUserId(e.target.value)}
-                  placeholder="요청 컨텍스트로 사용자 ID 설정"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="http://localhost:7350/healthcheck"
                   className="flex-grow border border-gray-300 px-3 py-2"
                 />
                 <button
@@ -87,7 +95,7 @@ export default function ApiExplorer({ apiMethods, onSubmit, response }: ApiExplo
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex flex-col md:flex-row">
         <div className="w-1/2 py-3">
           <h5 className="font-bold">요청 본문</h5>
           <hr className="mb-4" />
