@@ -21,11 +21,15 @@ export default function ApiExplorer() {
     
     try {
       const parsedBody = JSON.parse(requestBody);
+      const token = JSON.parse(localStorage.getItem('user') || '{}')?.token;
       const response = await fetch(url, {
         method: method,
         ...(method.toLowerCase() !== 'get' && {
           body: JSON.stringify(parsedBody)
-        })
+        }),
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       const data = await response.json();
