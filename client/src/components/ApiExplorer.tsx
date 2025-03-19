@@ -20,7 +20,7 @@ export default function ApiExplorer() {
     e.preventDefault();
     
     try {
-      const parsedBody = JSON.parse(requestBody);
+      const parsedBody = requestBody ? JSON.parse(requestBody) : {};
       const token = JSON.parse(localStorage.getItem('user') || '{}')?.token;
       const response = await fetch(url, {
         method: method,
