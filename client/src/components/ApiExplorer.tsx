@@ -14,11 +14,15 @@ export default function ApiExplorer() {
   "username": "admin",
   "password": "password"
 }`);
-  const [logs, setLogs] = useState<ApiLog[]>(() => {
-    const savedLogs = localStorage.getItem('apiLogs');
-    return savedLogs ? JSON.parse(savedLogs) : [];
-  });
+  const [logs, setLogs] = useState<ApiLog[]>([]);
   const [selectedLog, setSelectedLog] = useState<ApiLog | null>(null);
+
+  useEffect(() => {
+    const savedLogs = localStorage.getItem('apiLogs');
+    if (savedLogs) {
+      setLogs(JSON.parse(savedLogs));
+    }
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('apiLogs', JSON.stringify(logs));
