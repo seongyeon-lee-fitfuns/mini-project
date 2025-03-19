@@ -32,15 +32,19 @@ export default function JsonEditor({
   };
 
   return (
-    <div className="w-full h-full bg-gray-50 rounded-md">
+    <div className="w-full h-full bg-gray-900 rounded-md">
       <textarea
         ref={editorRef}
         className={`w-full h-full font-mono text-sm p-4 resize-none focus:outline-none
-          bg-[#1e1e1e] text-gray-200
-          ${readOnly ? 'bg-opacity-90 cursor-default' : 'bg-opacity-95'}
+          bg-gray-900 text-gray-100
+          ${readOnly ? 'opacity-90 cursor-default' : 'opacity-100'}
           rounded-md shadow-inner
           border border-gray-700
-          placeholder-gray-500`}
+          placeholder-gray-500
+          dark:bg-gray-800 
+          dark:text-gray-200
+          dark:border-gray-600
+          focus:border-blue-500 dark:focus:border-blue-400`}
         onChange={handleChange}
         readOnly={readOnly}
         style={{ height, overflow: 'auto' }}
