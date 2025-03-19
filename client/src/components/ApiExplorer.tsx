@@ -22,7 +22,7 @@ export default function ApiExplorer() {
     
     try {
       const parsedBody = requestBody ? JSON.parse(requestBody) : {};
-      const parsedHeaders = JSON.parse(headers);
+      const parsedHeaders = headers ? JSON.parse(headers) : {};
       const token = JSON.parse(localStorage.getItem('user') || '{}')?.token;
 
       const urlObject = new URL(url.startsWith('http') ? url : `http://${url}`);
