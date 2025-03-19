@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import JsonEditor from '@/components/JsonEditor';
 import ApiRequestForm from '@/components/ApiRequestForm';
 import ApiLogList from '@/components/ApiLogList';
@@ -14,8 +14,15 @@ export default function ApiExplorer() {
   "username": "admin",
   "password": "password"
 }`);
-  const [logs, setLogs] = useState<ApiLog[]>([]);
+  const [logs, setLogs] = useState<ApiLog[]>(() => {
+    const savedLogs = localStorage.getItem('apiLogs');
+    return savedLogs ? JSON.parse(savedLogs) : [];
+  });
   const [selectedLog, setSelectedLog] = useState<ApiLog | null>(null);
+
+  useEffect(() => {
+    localStorage.setItem('apiLogs', JSON.stringify(logs));
+  }, [logs]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +62,11 @@ export default function ApiExplorer() {
         status: response.status,
         timestamp: Date.now()
       };
-      setLogs(prev => [newLog, ...prev]);
+      
+      setLogs(prev => {
+        const newLogs = [newLog, ...prev].slice(0, 50);
+        return newLogs;
+      });
     } catch (error) {
       console.error('오류:', error);
       setResponse({ error: error });
@@ -68,6 +79,11 @@ export default function ApiExplorer() {
     if (log.requestBody) {
       setRequestBody(log.requestBody);
     }
+  };
+
+  const clearLogs = () => {
+    setLogs([]);
+    localStorage.removeItem('apiLogs');
   };
 
   return (
@@ -117,7 +133,15 @@ export default function ApiExplorer() {
       </div>
 
       <div className="mt-6">
-        <h3 className="text-lg font-bold mb-3">요청 기록</h3>
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-lg font-bold">요청 기록</h3>
+          <button
+            onClick={clearLogs}
+            className="text-red-500 hover:text-red-600 text-sm"
+          >
+            기록 지우기
+          </button>
+        </div>
         <ApiLogList
           logs={logs}
           selectedLog={selectedLog}
