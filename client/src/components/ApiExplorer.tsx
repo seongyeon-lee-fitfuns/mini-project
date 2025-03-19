@@ -10,15 +10,9 @@ export default function ApiExplorer() {
   const [url, setUrl] = useState<string>('');
   const [response, setResponse] = useState<ApiResponse | null>(null);
   const [requestBody, setRequestBody] = useState<string>(`{
-    "account": {
-      "id": "<string>",
-      "vars": {
-        "<string>": "<string>"
-      }
-    },
-    "create": false,
-    "username": "<string>"
-  }`);
+  "username": "admin",
+  "password": "password"
+}`);
   const [logs, setLogs] = useState<ApiLog[]>([]);
   const [selectedLog, setSelectedLog] = useState<ApiLog | null>(null);
 
@@ -46,8 +40,7 @@ export default function ApiExplorer() {
       };
       setLogs(prev => [newLog, ...prev]);
     } catch (error) {
-      console.error('JSON 파싱 오류:', error);
-      alert('요청 본문 JSON이 유효하지 않습니다.');
+      console.error('오류:', error);
     }
   };
 
@@ -97,7 +90,7 @@ export default function ApiExplorer() {
           <hr className="mb-4" />
           <div className="border rounded p-2 mb-3 h-[500px]">
             <JsonEditor 
-              value={response ? JSON.stringify(response.error || response.data, null, 2) : ''} 
+              value={JSON.stringify(response, null, 2)} 
               readOnly 
               height="500px"
             />
