@@ -6,9 +6,10 @@ interface ApiLogListProps {
   selectedLog: ApiLog | null;
   onLogSelect: (log: ApiLog | null) => void;
   onLogReload: (log: ApiLog) => void;
+  onLogDelete: (timestamp: number) => void;
 }
 
-export default function ApiLogList({ logs, selectedLog, onLogSelect, onLogReload }: ApiLogListProps) {
+export default function ApiLogList({ logs, selectedLog, onLogSelect, onLogReload, onLogDelete }: ApiLogListProps) {
   // 상태 코드에 따른 색상 결정
   const getStatusColor = (status: number) => {
     if (status >= 200 && status < 300) return 'bg-green-100 text-green-800';
@@ -43,6 +44,15 @@ export default function ApiLogList({ logs, selectedLog, onLogSelect, onLogReload
                 className="text-blue-500 hover:text-blue-600 text-sm"
               >
                 다시 요청하기
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onLogDelete(log.timestamp);
+                }}
+                className="text-red-500 hover:text-red-600 text-sm"
+              >
+                삭제
               </button>
               <div className="text-sm text-gray-500">
                 {new Date(log.timestamp).toLocaleString()}

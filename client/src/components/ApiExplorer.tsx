@@ -25,7 +25,9 @@ export default function ApiExplorer() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('apiLogs', JSON.stringify(logs));
+    if (logs.length > 0) {
+      localStorage.setItem('apiLogs', JSON.stringify(logs));
+    }
   }, [logs]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,6 +85,14 @@ export default function ApiExplorer() {
     if (log.requestBody) {
       setRequestBody(log.requestBody);
     }
+  };
+
+  const handleLogDelete = (timestamp: number) => {
+    setLogs(prev => {
+      const newLogs = prev.filter(log => log.timestamp !== timestamp);
+      localStorage.setItem('apiLogs', JSON.stringify(newLogs));
+      return newLogs;
+    });
   };
 
   const clearLogs = () => {
@@ -143,7 +153,7 @@ export default function ApiExplorer() {
             onClick={clearLogs}
             className="text-red-500 hover:text-red-600 text-sm"
           >
-            기록 지우기
+            모든 기록 지우기
           </button>
         </div>
         <ApiLogList
@@ -151,6 +161,7 @@ export default function ApiExplorer() {
           selectedLog={selectedLog}
           onLogSelect={setSelectedLog}
           onLogReload={loadFromLog}
+          onLogDelete={handleLogDelete}
         />
       </div>
     </div>
