@@ -22,14 +22,25 @@ export default function ApiExplorer() {
     try {
       const parsedBody = requestBody ? JSON.parse(requestBody) : {};
       const token = JSON.parse(localStorage.getItem('user') || '{}')?.token;
+
+      // URL에서 포트 번호 추출
+      const urlObject = new URL(url.startsWith('http') ? url : `http://${url}`);
+      const port = urlObject.port;
+
+      // 헤더 설정
+      const headers: Record<string, string> = {};
+
+      // 포트가 7351일 경우에만 Authorization과 Author 헤더 추가
+      if (port === '7351') {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(url, {
         method: method,
+        headers,
         ...(method.toLowerCase() !== 'get' && {
           body: JSON.stringify(parsedBody)
-        }),
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        })
       });
 
       const data = await response.json();
@@ -45,6 +56,7 @@ export default function ApiExplorer() {
       setLogs(prev => [newLog, ...prev]);
     } catch (error) {
       console.error('오류:', error);
+      setResponse({ error: error });
     }
   };
 
