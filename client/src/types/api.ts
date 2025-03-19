@@ -7,6 +7,7 @@ export interface ApiLog {
   method: string;
   url: string;
   requestBody?: string;
-  response?: any;
+  response: any;
+  status: number;
   timestamp: number;
 } 

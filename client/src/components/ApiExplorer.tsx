@@ -23,14 +23,10 @@ export default function ApiExplorer() {
       const parsedBody = requestBody ? JSON.parse(requestBody) : {};
       const token = JSON.parse(localStorage.getItem('user') || '{}')?.token;
 
-      // URL에서 포트 번호 추출
       const urlObject = new URL(url.startsWith('http') ? url : `http://${url}`);
       const port = urlObject.port;
 
-      // 헤더 설정
       const headers: Record<string, string> = {};
-
-      // 포트가 7351일 경우에만 Authorization과 Author 헤더 추가
       if (port === '7351') {
         headers['Authorization'] = `Bearer ${token}`;
       }
@@ -51,6 +47,7 @@ export default function ApiExplorer() {
         url,
         requestBody: method.toLowerCase() !== 'get' ? requestBody : undefined,
         response: data,
+        status: response.status,
         timestamp: Date.now()
       };
       setLogs(prev => [newLog, ...prev]);

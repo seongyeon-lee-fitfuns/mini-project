@@ -9,6 +9,14 @@ interface ApiLogListProps {
 }
 
 export default function ApiLogList({ logs, selectedLog, onLogSelect, onLogReload }: ApiLogListProps) {
+  // 상태 코드에 따른 색상 결정
+  const getStatusColor = (status: number) => {
+    if (status >= 200 && status < 300) return 'bg-green-100 text-green-800';
+    if (status >= 400 && status < 500) return 'bg-yellow-100 text-yellow-800';
+    if (status >= 500) return 'bg-red-100 text-red-800';
+    return 'bg-gray-100 text-gray-800';
+  };
+
   return (
     <div className="space-y-2">
       {logs.map((log) => (
@@ -20,6 +28,9 @@ export default function ApiLogList({ logs, selectedLog, onLogSelect, onLogReload
             <div className="flex items-center space-x-3">
               <span className="uppercase font-mono bg-gray-200 px-2 py-1 rounded text-sm">
                 {log.method}
+              </span>
+              <span className={`px-2 py-1 rounded text-sm font-medium ${getStatusColor(log.status)}`}>
+                {log.status}
               </span>
               <span className="text-gray-600">{log.url}</span>
             </div>
@@ -81,6 +92,12 @@ function ApiLogDetail({ log }: { log: ApiLog }) {
         <div>
           <h4 className="font-bold mb-2">응답 정보</h4>
           <div className="bg-white p-3 rounded border">
+            <div className="mb-2">
+              <span className="font-semibold">Status:</span>{' '}
+              <span className={`px-2 py-1 rounded text-sm font-medium ${getStatusColor(log.status)}`}>
+                {log.status}
+              </span>
+            </div>
             <JsonEditor
               value={JSON.stringify(log.response, null, 2)}
               readOnly
