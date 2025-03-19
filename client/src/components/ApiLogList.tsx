@@ -50,7 +50,7 @@ export default function ApiLogList({ logs, selectedLog, onLogSelect, onLogReload
             </div>
           </div>
           
-          {selectedLog?.timestamp === log.timestamp && <ApiLogDetail log={log} />}
+          {selectedLog?.timestamp === log.timestamp && <ApiLogDetail log={log} getStatusColor={getStatusColor} />}
         </div>
       ))}
       {logs.length === 0 && (
@@ -62,7 +62,7 @@ export default function ApiLogList({ logs, selectedLog, onLogSelect, onLogReload
   );
 }
 
-function ApiLogDetail({ log }: { log: ApiLog }) {
+function ApiLogDetail({ log, getStatusColor }: { log: ApiLog; getStatusColor: (status: number) => string }) {
   return (
     <div className="mt-2 p-4 border rounded-lg bg-gray-50">
       <div className="grid grid-cols-2 gap-4">
