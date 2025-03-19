@@ -1,0 +1,19 @@
+{
+  "name": "game-client",
+  "version": "1.0.0",
+  "description": "Nakama game client using JavaScript",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "webpack serve --mode development",
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production"
+  },
+  "dependencies": {
+    "@heroiclabs/nakama-js": "^2.2.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  }
+} 
