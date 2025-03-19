@@ -7,9 +7,16 @@ interface JsonEditorProps {
   onChange?: (value: string) => void;
   readOnly?: boolean;
   height?: string;
+  placeholder?: string;
 }
 
-export default function JsonEditor({ value, onChange, readOnly = false, height = '300px' }: JsonEditorProps) {
+export default function JsonEditor({ 
+  value, 
+  onChange, 
+  readOnly = false, 
+  height = '300px',
+  placeholder
+}: JsonEditorProps) {
   const editorRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -25,16 +32,22 @@ export default function JsonEditor({ value, onChange, readOnly = false, height =
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full bg-gray-50 rounded-md">
       <textarea
         ref={editorRef}
-        className="w-full h-full font-mono text-sm p-2 resize-none border-0 focus:outline-none"
+        className={`w-full h-full font-mono text-sm p-4 resize-none focus:outline-none
+          bg-[#1e1e1e] text-gray-200
+          ${readOnly ? 'bg-opacity-90 cursor-default' : 'bg-opacity-95'}
+          rounded-md shadow-inner
+          border border-gray-700
+          placeholder-gray-500`}
         onChange={handleChange}
         readOnly={readOnly}
         style={{ height, overflow: 'auto' }}
         spellCheck="false"
         autoCorrect="off"
         autoCapitalize="off"
+        placeholder={placeholder}
       />
     </div>
   );
