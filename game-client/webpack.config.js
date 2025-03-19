@@ -12,5 +12,15 @@ module.exports = {
     },
     compress: true,
     port: 4242,
+    onListening: function (devServer) {
+      if (!devServer) {
+        throw new Error('webpack-dev-server is not defined');
+      }
+      const port = devServer.server.address().port;
+      console.log('\n');
+      console.log('🚀 개발 서버가 실행되었습니다:');
+      console.log(`http://localhost:${port}`);
+      console.log('\n');
+    }
   },
 }; 
