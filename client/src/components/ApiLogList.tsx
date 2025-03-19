@@ -85,6 +85,18 @@ function ApiLogDetail({ log, getStatusColor }: { log: ApiLog; getStatusColor: (s
             <div className="mb-2">
               <span className="font-semibold">URL:</span> {log.url}
             </div>
+            {log.headers && (
+              <div className="mb-2">
+                <span className="font-semibold">Headers:</span>
+                <div className="mt-2">
+                  <JsonEditor
+                    value={JSON.stringify(log.headers, null, 2)}
+                    readOnly
+                    height="100px"
+                  />
+                </div>
+              </div>
+            )}
             {log.requestBody && (
               <div>
                 <span className="font-semibold">Request Body:</span>

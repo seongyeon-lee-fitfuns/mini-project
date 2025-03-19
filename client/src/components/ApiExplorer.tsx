@@ -63,6 +63,7 @@ export default function ApiExplorer() {
       const newLog: ApiLog = {
         method,
         url,
+        headers: finalHeaders,
         requestBody: method.toLowerCase() !== 'get' ? requestBody : undefined,
         response: data,
         status: response.status,
@@ -82,6 +83,9 @@ export default function ApiExplorer() {
   const loadFromLog = (log: ApiLog) => {
     setMethod(log.method);
     setUrl(log.url);
+    if (log.headers) {
+      setHeaders(JSON.stringify(log.headers, null, 2));
+    }
     if (log.requestBody) {
       setRequestBody(log.requestBody);
     }
