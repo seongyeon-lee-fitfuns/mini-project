@@ -50,6 +50,7 @@ class NakamaService {
       };
       
       this.socket = await this.client.createSocket(false, false);
+      console.log('token', this.session.token);
       await this.socket.connect(this.session, true);
       return { success: true, user: this.currentUser };
     } catch (error) {
