@@ -36,15 +36,36 @@ async function handleLogin() {
             const account = await client.getAccount(session);
             console.log("계정 정보:", account);
             
-            // 사용자 정보를 화면에 표시
-            const userInfo = `
-                사용자 ID: ${account.user.id}
-                사용자 이름: ${account.user.username || '미설정'}
-                생성일: ${new Date(account.created_at).toLocaleString()}
-            `;
             gameStatus.innerHTML = `<pre>${JSON.stringify(account, null, 2)}</pre>`;
-            
-            // 여기에 게임 로직 추가
+
+            // token 복사하기 쉽게
+            const token = session.token;
+            // 토큰 표시 영역 생성
+            const tokenDisplay = document.createElement('div');
+            tokenDisplay.style.marginTop = '20px';
+            tokenDisplay.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <input type="text" 
+                           value="Authorization: Bearer ${token}" 
+                           readonly 
+                           style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"
+                    >
+                    <button onclick="(async () => { 
+                            await navigator.clipboard.writeText('Authorization: Bearer ${token}');
+                            this.textContent = '복사됨!';
+                            this.style.background = '#1C1000';
+                            setTimeout(() => {
+                                this.textContent = '복사';
+                                this.style.background = '#4CAF50';
+                            }, 1000);
+                        })()"
+                            style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s;"
+                    >
+                        복사
+                    </button>
+                </div>
+            `;
+            gameStatus.appendChild(tokenDisplay);
         }
     } catch (error) {
         gameStatus.textContent = `로그인 실패: ${error.message}`;
